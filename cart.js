@@ -129,7 +129,7 @@ checkoutBtn.addEventListener("click", () => {
   cart.length = 0;
   renderCart();
   closeCart();
-  showToast("Checkout demo berhasil. Pembayaran tidak diproses.");
+  showToast("Checkout demo berhasil!");
 });
 
 window.addEventListener("storage", (e) => {

@@ -131,14 +131,15 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        background: var(--ink);
+        background: linear-gradient(135deg, var(--pink-deep), var(--pink));
         color: #fff;
-        padding: 9px 16px;
+        padding: 12px 22px;
         border-radius: 999px;
         font-weight: 700;
-        font-size: 0.9rem;
+        font: inherit;
         cursor: pointer;
         border: none;
+        box-shadow: var(--shadow);
         transition: transform 0.15s;
         flex: 0 0 auto;
       }
@@ -146,8 +147,8 @@
         transform: translateY(-2px);
       }
       .cart-count {
-        background: var(--pink);
-        color: var(--ink);
+        background: rgba(255, 255, 255, 0.3);
+        color: #fff;
         border-radius: 50%;
         width: 20px;
         height: 20px;
@@ -229,9 +230,21 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 12px 22px;
+        padding: 14px 26px;
         border-radius: 999px;
         font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+      .btn-primary {
         background: linear-gradient(135deg, var(--pink-deep), var(--pink));
         color: #fff;
         box-shadow: var(--shadow);
@@ -426,18 +439,18 @@
       }
 
       .add-btn {
-        background: var(--pink-soft);
-        color: var(--pink-deep);
+        background: var(--blue-soft);
+        color: var(--blue-deep);
         border: none;
         border-radius: 999px;
         padding: 8px 14px;
         font-weight: 700;
-        font-size: 0.82rem;
+        font-size: 0.85rem;
         cursor: pointer;
         transition: background 0.2s;
       }
       .add-btn:hover {
-        background: var(--pink-deep);
+        background: var(--blue);
         color: #fff;
       }
 
@@ -551,6 +564,31 @@
         transform: translateX(-50%) translateY(0);
       }
 
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        background: var(--cream);
+        border-radius: 14px;
+        padding: 12px 14px;
+        font-size: 0.9rem;
+      }
+      .cart-item button {
+        background: none;
+        border: none;
+        color: var(--pink-deep);
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .order-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 800;
+        font-size: 1.2rem;
+        border-top: 2px dashed rgba(63, 143, 176, 0.2);
+        margin-top: 10px;
+        padding-top: 14px;
+        color: var(--ink);
+      }
       .cart-drawer {
         position: fixed;
         top: 0;
@@ -589,26 +627,7 @@
         flex-direction: column;
         gap: 12px;
       }
-      .cart-item {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        background: var(--cream);
-        border-radius: 14px;
-        padding: 12px 14px;
-        font-size: 0.9rem;
-      }
-      .cart-item-detail {
-        min-width: 0;
-      }
-      .cart-item-detail strong {
-        overflow-wrap: anywhere;
-      }
-      .cart-item-note,
-      .cart-item-price {
-        color: var(--ink-soft);
-        font-size: 0.82rem;
-      }
+
       .cart-item-actions {
         flex: 0 0 auto;
         text-align: right;
@@ -732,9 +751,7 @@
         <a href="catalogue.html">Katalog Teh</a>
         <a href="index.html#visit">Kontak Kami</a>
         <li class="nav-item" style="list-style: none">
-      <button class="nav-trigger" type="button">
-            Credits
-          </button>
+          <button class="nav-trigger" type="button">Credits</button>
           <div class="nav-dropdown">
             <a href="image-source.html">Image Source</a>
             <a href="codes-used.html">Codes Used</a>
@@ -883,15 +900,13 @@
         </button>
       </div>
       <div class="cart-items" id="cartItems" aria-live="polite">
-        <div class="cart-empty">
-          Keranjangmu kosong, pilih teh dari katalog!
-        </div>
+        <div class="cart-empty">Keranjangmu kosong, tambahkan milk tea!</div>
       </div>
       <div class="order-total">
         <span>Total</span><span id="cartTotal">Rp 0</span>
       </div>
       <button
-        class="btn"
+        class="btn btn-primary"
         id="checkoutBtn"
         type="button"
         style="width: 100%; margin-top: 16px"
@@ -904,6 +919,7 @@
       </p>
     </aside>
 
+    <script src="cart.js"></script>
     <script>
       const catalogue = {
         black: [
@@ -1038,113 +1054,16 @@
         }
       });
 
-      const toast = document.getElementById("toast");
-      let toastTimer;
-      function showToast(msg) {
-        toast.textContent = msg;
-        toast.classList.add("show");
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
-      }
-
-      const cart = [];
-      const cartItemsEl = document.getElementById("cartItems");
-      const cartCountEl = document.getElementById("cartCount");
-      const cartTotalEl = document.getElementById("cartTotal");
-      const checkoutBtn = document.getElementById("checkoutBtn");
-      const cartDrawer = document.getElementById("cartDrawer");
-      const overlay = document.getElementById("overlay");
-
-      function addToCart(tea) {
+      function addTea(tea) {
         if (!tea) return;
-        cart.push({ base: tea.name, price: tea.price });
-        renderCart();
+        addToCart({
+          base: tea.name,
+          ice: null,
+          toppings: [],
+          price: tea.price,
+        });
         showToast(`${tea.name} ditambahkan ke keranjang`);
       }
-
-      function removeFromCart(index) {
-        cart.splice(index, 1);
-        renderCart();
-      }
-
-      function renderCart() {
-        cartCountEl.textContent = cart.length;
-        cartItemsEl.replaceChildren();
-
-        if (cart.length === 0) {
-          const emptyMessage = document.createElement("div");
-          emptyMessage.className = "cart-empty";
-          emptyMessage.textContent =
-            "Keranjangmu kosong, pilih teh dari katalog!";
-          cartItemsEl.appendChild(emptyMessage);
-        } else {
-          cart.forEach((item, index) => {
-            const row = document.createElement("div");
-            row.className = "cart-item";
-
-            const detail = document.createElement("div");
-            detail.className = "cart-item-detail";
-            const name = document.createElement("strong");
-            name.textContent = item.base;
-            const note = document.createElement("div");
-            note.className = "cart-item-note";
-            note.textContent = "Teh pilihan dari katalog";
-            detail.append(name, note);
-
-            const actions = document.createElement("div");
-            actions.className = "cart-item-actions";
-            const price = document.createElement("div");
-            price.className = "cart-item-price";
-            price.textContent = formatMoney(item.price);
-            const removeButton = document.createElement("button");
-            removeButton.type = "button";
-            removeButton.textContent = "Hapus";
-            removeButton.addEventListener("click", () => removeFromCart(index));
-            actions.append(price, removeButton);
-
-            row.append(detail, actions);
-            cartItemsEl.appendChild(row);
-          });
-        }
-
-        const total = cart.reduce((sum, item) => sum + item.price, 0);
-        cartTotalEl.textContent = formatMoney(total);
-        checkoutBtn.disabled = cart.length === 0;
-      }
-
-      function openCart() {
-        cartDrawer.classList.add("open");
-        overlay.classList.add("show");
-        cartDrawer.setAttribute("aria-hidden", "false");
-        overlay.setAttribute("aria-hidden", "false");
-      }
-
-      function closeCart() {
-        cartDrawer.classList.remove("open");
-        overlay.classList.remove("show");
-        cartDrawer.setAttribute("aria-hidden", "true");
-        overlay.setAttribute("aria-hidden", "true");
-      }
-
-      document
-        .getElementById("cartOpenBtn")
-        .addEventListener("click", openCart);
-      document
-        .getElementById("cartCloseBtn")
-        .addEventListener("click", closeCart);
-      overlay.addEventListener("click", closeCart);
-      checkoutBtn.addEventListener("click", () => {
-        if (cart.length === 0) return;
-        cart.length = 0;
-        renderCart();
-        closeCart();
-        showToast("Checkout demo berhasil. Pembayaran tidak diproses.");
-      });
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") closeCart();
-      });
-
-      renderCart();
     </script>
   </body>
 </html>

@@ -1156,6 +1156,7 @@
       </p>
     </div>
 
+    <script src="cart.js"></script>
     <script>
       // ---------- Data ----------
       const bases = [
@@ -1234,13 +1235,10 @@
       ];
 
       // ---------- State ----------
-      let cart = [];
       let selectedBase = bases[0];
       let sweet = 50;
       let ice = 50;
       let selectedToppings = [];
-
-      const fmt = (n) => "Rp " + n.toLocaleString("id-ID");
 
       // ---------- Render menu ----------
       const menuGrid = document.getElementById("menuGrid");
@@ -1372,90 +1370,6 @@
         heroToggle = !heroToggle;
         heroFill.style.height = heroToggle ? "95%" : "85%";
       }, 2600);
-
-      // ---------- Cart logic ----------
-      const cartItemsEl = document.getElementById("cartItems");
-      const cartCountEl = document.getElementById("cartCount");
-      const cartTotalEl = document.getElementById("cartTotal");
-      const checkoutBtn = document.getElementById("checkoutBtn");
-
-      function addToCart(item) {
-        cart.push(item);
-        renderCart();
-      }
-
-      function removeFromCart(index) {
-        cart.splice(index, 1);
-        renderCart();
-      }
-
-      function renderCart() {
-        cartCountEl.textContent = cart.length;
-        if (cart.length === 0) {
-          cartItemsEl.innerHTML =
-            '<div class="cart-empty">Keranjangmu kosong, tambahkan milk tea!</div>';
-        } else {
-          cartItemsEl.innerHTML = "";
-          cart.forEach((item, i) => {
-            const row = document.createElement("div");
-            row.className = "cart-item";
-            const toppingsText = item.toppings.length
-              ? ` · ${item.toppings.join(", ")}`
-              : "";
-            row.innerHTML = `
-          <div>
-            <strong>${item.base}</strong><br>
-            <span style="color:var(--ink-soft); font-size:0.82rem;">${item.ice}% es${toppingsText}</span>
-          </div>
-          <div style="text-align:right;">
-            <div>${fmt(item.price)}</div>
-            <button data-i="${i}">Hapus</button>
-          </div>
-        `;
-            row
-              .querySelector("button")
-              .addEventListener("click", () => removeFromCart(i));
-            cartItemsEl.appendChild(row);
-          });
-        }
-        const total = cart.reduce((s, i) => s + i.price, 0);
-        cartTotalEl.textContent = fmt(total);
-        checkoutBtn.disabled = cart.length === 0;
-      }
-
-      // ---------- Toast ----------
-      const toast = document.getElementById("toast");
-      let toastTimer;
-      function showToast(msg) {
-        toast.textContent = msg;
-        toast.classList.add("show");
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
-      }
-
-      // ---------- Cart drawer open/close ----------
-      const cartDrawer = document.getElementById("cartDrawer");
-      const overlay = document.getElementById("overlay");
-      document.getElementById("cartOpenBtn").addEventListener("click", () => {
-        cartDrawer.classList.add("open");
-        overlay.classList.add("show");
-      });
-      function closeCart() {
-        cartDrawer.classList.remove("open");
-        overlay.classList.remove("show");
-      }
-      document
-        .getElementById("cartCloseBtn")
-        .addEventListener("click", closeCart);
-      overlay.addEventListener("click", closeCart);
-      checkoutBtn.addEventListener("click", () => {
-        if (cart.length === 0) return;
-        cart.length = 0;
-        renderCart();
-        closeCart();
-        showToast("Checkout demo berhasil. Pembayaran tidak diproses.");
-      });
-
       updateBuildSummary();
       renderCart();
     </script>

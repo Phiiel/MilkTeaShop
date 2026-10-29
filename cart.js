@@ -3,7 +3,7 @@ const CART_KEY = "shopping_cart";
 
 function loadCart() {
   try {
-    const data = JSON.parse(localStorage.getItem(CART_KEY));
+    const data = JSON.parse(sessionStorage.getItem(CART_KEY));
     if (!Array.isArray(data)) return [];
     return data
       .filter((i) => i && typeof i.price === "number")
@@ -20,7 +20,7 @@ function loadCart() {
 
 function saveCart() {
   try {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
   } catch (err) {}
 }
 
@@ -31,6 +31,11 @@ const cartTotalEl = document.getElementById("cartTotal");
 const checkoutBtn = document.getElementById("checkoutBtn");
 const cartDrawer = document.getElementById("cartDrawer");
 const overlay = document.getElementById("overlay");
+
+// Langsung set jumlah keranjang dari awal biar gak ada flash "0"
+if (cartCountEl) {
+  cartCountEl.textContent = cart.length;
+}
 
 function addToCart(item) {
   cart.push({
@@ -49,7 +54,8 @@ function removeFromCart(index) {
 
 function renderCart() {
   saveCart();
-  cartCountEl.textContent = cart.length;
+  if (cartCountEl) cartCountEl.textContent = cart.length;
+  if (!cartItemsEl) return;
   cartItemsEl.replaceChildren();
 
   if (cart.length === 0) {
@@ -91,14 +97,19 @@ function renderCart() {
     });
   }
 
-  cartTotalEl.textContent = fmt(cart.reduce((s, i) => s + i.price, 0));
-  checkoutBtn.disabled = cart.length === 0;
+  if (cartTotalEl) {
+    cartTotalEl.textContent = fmt(cart.reduce((s, i) => s + i.price, 0));
+  }
+  if (checkoutBtn) {
+    checkoutBtn.disabled = cart.length === 0;
+  }
 }
 
 // ---------- Toast ----------
 const toast = document.getElementById("toast");
 let toastTimer;
 function showToast(msg) {
+  if (!toast) return;
   toast.textContent = msg;
   toast.classList.add("show");
   clearTimeout(toastTimer);
@@ -106,38 +117,40 @@ function showToast(msg) {
 }
 
 // ---------- Cart drawer ----------
+const cartOpenBtn = document.getElementById("cartOpenBtn");
+const cartCloseBtn = document.getElementById("cartCloseBtn");
+
+if (cartOpenBtn) cartOpenBtn.addEventListener("click", openCart);
+if (cartCloseBtn) cartCloseBtn.addEventListener("click", closeCart);
+if (overlay) overlay.addEventListener("click", closeCart);
+
 function openCart() {
-  cartDrawer.classList.add("open");
-  overlay.classList.add("show");
-  cartDrawer.setAttribute("aria-hidden", "false");
-  overlay.setAttribute("aria-hidden", "false");
+  if (cartDrawer) cartDrawer.classList.add("open");
+  if (overlay) overlay.classList.add("show");
+  cartDrawer?.setAttribute("aria-hidden", "false");
+  overlay?.setAttribute("aria-hidden", "false");
 }
 function closeCart() {
-  cartDrawer.classList.remove("open");
-  overlay.classList.remove("show");
-  cartDrawer.setAttribute("aria-hidden", "true");
-  overlay.setAttribute("aria-hidden", "true");
+  if (cartDrawer) cartDrawer.classList.remove("open");
+  if (overlay) overlay.classList.remove("show");
+  cartDrawer?.setAttribute("aria-hidden", "true");
+  overlay?.setAttribute("aria-hidden", "true");
 }
-document.getElementById("cartOpenBtn").addEventListener("click", openCart);
-document.getElementById("cartCloseBtn").addEventListener("click", closeCart);
-overlay.addEventListener("click", closeCart);
+
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeCart();
 });
-checkoutBtn.addEventListener("click", () => {
-  if (cart.length === 0) return;
-  cart.length = 0;
-  renderCart();
-  closeCart();
-  showToast("Checkout demo berhasil!");
-});
 
-window.addEventListener("storage", (e) => {
-  if (e.key === CART_KEY) {
-    cart = loadCart();
+if (checkoutBtn) {
+  checkoutBtn.addEventListener("click", () => {
+    if (cart.length === 0) return;
+    cart.length = 0;
     renderCart();
-  }
-});
+    closeCart();
+    showToast("Checkout demo berhasil!");
+  });
+}
+
 window.addEventListener("pageshow", (e) => {
   if (e.persisted) {
     cart = loadCart();

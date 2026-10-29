@@ -760,7 +760,7 @@
         </li>
       </nav>
       <button class="cart-pill" id="cartOpenBtn" type="button">
-        🧋 Keranjang <span class="cart-count" id="cartCount">0</span>
+        🧋 Keranjang <span class="cart-count" id="cartCount"></span>
       </button>
     </header>
 
@@ -1019,7 +1019,12 @@
       `;
           card.querySelector(".add-btn").addEventListener("click", (e) => {
             e.stopPropagation();
-            addToCart(tea);
+            addTea({
+              name: `${tea.name} (1 kg)`,
+              price: tea.price,
+              image: tea.image,
+              note: tea.note,
+            });
           });
           grid.appendChild(card);
         });

@@ -1,0 +1,1463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kayla's Milk Tea Shop</title>
+    <style>
+      :root {
+        --pink-soft: #f9d5e6;
+        --pink: #ef8fb8;
+        --pink-deep: #d95d94;
+        --blue-soft: #cdeaf5;
+        --blue: #7fc4e0;
+        --blue-deep: #3f8fb0;
+        --cream: #fffaf6;
+        --ink: #3a2b38;
+        --ink-soft: #7a6274;
+        --shadow: 0 10px 24px rgba(63, 143, 176, 0.15);
+        --radius-cup: 18px 18px 30px 30px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--cream);
+        color: var(--ink);
+        font-family: "Helvetica", sans-serif;
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2,
+      h3,
+      .display {
+        font-family: "Helvetica", cursive;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* ---------- Background swirl ---------- */
+      .bg-swirl {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background:
+          radial-gradient(
+            circle at 12% 8%,
+            var(--pink-soft) 0%,
+            transparent 38%
+          ),
+          radial-gradient(
+            circle at 88% 18%,
+            var(--blue-soft) 0%,
+            transparent 42%
+          ),
+          radial-gradient(
+            circle at 20% 92%,
+            var(--blue-soft) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 88%,
+            var(--pink-soft) 0%,
+            transparent 38%
+          );
+      }
+
+      /* ---------- Nav ---------- */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 6vw;
+        background: rgba(255, 250, 246, 0.85);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(217, 93, 148, 0.12);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 50% 50% 50% 8px;
+        background: linear-gradient(135deg, var(--pink), var(--blue));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+      }
+
+      .brand-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: 0.1px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        margin: 0 auto;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 24px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-links a,
+      .nav-trigger {
+        font-weight: 700;
+        color: var(--ink-soft);
+        font-size: 0.96rem;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.current,
+      .nav-trigger:hover {
+        color: var(--pink-deep);
+      }
+
+      .nav-item {
+        position: relative;
+      }
+
+      .nav-dropdown {
+        position: absolute;
+        top: calc(100% + 12px);
+        left: 0;
+        min-width: 220px;
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid rgba(63, 143, 176, 0.12);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease,
+          visibility 0.2s ease;
+        z-index: 60;
+      }
+
+      .nav-item:hover .nav-dropdown,
+      .nav-item:focus-within .nav-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .nav-dropdown a {
+        display: block;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: none;
+        color: var(--ink-soft);
+        background: transparent;
+        text-decoration: none;
+      }
+
+      .nav-dropdown a:hover {
+        background: var(--pink-soft);
+        color: var(--pink-deep);
+      }
+
+      .nav-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        border: 1px solid rgba(63, 143, 176, 0.14);
+        border-radius: 999px;
+        cursor: pointer;
+        padding: 9px 14px;
+        font: inherit;
+        font-weight: 700;
+        color: var(--ink-soft);
+        box-shadow: 0 6px 18px rgba(63, 143, 176, 0.08);
+        font-size: 0.96rem;
+      }
+
+      .nav-trigger:hover {
+        color: var(--pink-deep);
+      }
+
+      .cart-pill {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--pink-deep), var(--pink));
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 999px;
+        font-weight: 700;
+        font: inherit;
+        cursor: pointer;
+        border: none;
+        box-shadow: var(--shadow);
+        transition: transform 0.15s;
+        flex: 0 0 auto;
+      }
+      .cart-pill:hover {
+        transform: translateY(-2px);
+      }
+      .cart-count {
+        background: rgba(255, 255, 255, 0.3);
+        color: #fff;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+      }
+
+      /* ---------- Hero ---------- */
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        align-items: center;
+        gap: 40px;
+        padding: 64px 6vw 40px;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      .hero-eyebrow {
+        font-weight: 700;
+        color: var(--pink-deep);
+        font-size: 0.95rem;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.4rem, 5vw, 4rem);
+        line-height: 1.05;
+        margin: 10px 0 18px;
+        color: var(--ink);
+      }
+
+      .hero h1 span {
+        display: block;
+        color: var(--pink-deep);
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+        color: var(--ink-soft);
+        max-width: 46ch;
+        line-height: 1.6;
+        margin-bottom: 28px;
+      }
+
+      .hero-ctas {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 26px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--pink-deep), var(--pink));
+        color: #fff;
+        box-shadow: var(--shadow);
+      }
+
+      .btn-outline {
+        background: transparent;
+        border-color: var(--blue-deep);
+        color: var(--blue-deep);
+      }
+
+      /* ---------- Hero interactive cup ---------- */
+      .hero-cup-wrap {
+        display: flex;
+        justify-content: center;
+        position: relative;
+      }
+
+      .cup-stage {
+        width: 260px;
+        text-align: center;
+      }
+
+      .cup {
+        position: relative;
+        width: 220px;
+        height: 270px;
+        margin: 0 auto 18px;
+      }
+
+      .cup-body {
+        position: absolute;
+        top: 12px;
+        left: 10px;
+        right: 10px;
+        bottom: 0;
+        border-radius: 10px 10px 28px 28px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.5),
+          rgba(255, 255, 255, 0.15)
+        );
+        border: 3px solid rgba(58, 43, 56, 0.15);
+        overflow: hidden;
+        box-shadow: inset 0 -4px 10px rgba(0, 0, 0, 0.05);
+      }
+      .cup-body::before {
+        content: "";
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        height: 12px;
+        border: 3px solid rgba(58, 43, 56, 0.18);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.55);
+        z-index: 2;
+      }
+      .hero-cup .cup-body {
+        top: 20px;
+        border-radius: var(--radius-cup);
+      }
+      .hero-cup .cup-body::before {
+        display: none;
+      }
+
+      .cup-fill {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 85%;
+        background: linear-gradient(180deg, var(--pink), var(--pink-deep));
+        transition:
+          background 0.4s ease,
+          height 0.4s ease;
+      }
+
+      .cup-lid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 22px;
+        background: var(--ink);
+        border-radius: 10px 10px 4px 4px;
+        z-index: 2;
+      }
+
+      .cup-straw {
+        position: absolute;
+        top: -38px;
+        right: 36px;
+        width: 12px;
+        height: 100px;
+        background: repeating-linear-gradient(
+          180deg,
+          var(--blue-deep) 0 8px,
+          var(--blue-soft) 8px 16px
+        );
+        border-radius: 6px;
+        transform: rotate(8deg);
+      }
+
+      .cup-caption {
+        font-weight: 700;
+        color: var(--ink-soft);
+        font-size: 0.95rem;
+      }
+
+      /* ---------- Section shell ---------- */
+      section {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 70px 6vw;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 34px;
+        flex-wrap: wrap;
+      }
+
+      .section-head h2 {
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+      }
+
+      .section-head p {
+        color: var(--ink-soft);
+        max-width: 42ch;
+        line-height: 1.6;
+      }
+
+      /* ---------- Menu ---------- */
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 22px;
+      }
+
+      .menu-card {
+        background: #ffff;
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(63, 143, 176, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        cursor: pointer;
+      }
+
+      .menu-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 30px rgba(217, 93, 148, 0.22);
+      }
+
+      .favorite-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 222px;
+        background: linear-gradient(135deg, #fff, #fff8fb);
+      }
+      .favorite-card::before {
+        content: "";
+        position: absolute;
+        top: -28px;
+        right: -24px;
+        width: 118px;
+        height: 118px;
+        border-radius: 50%;
+        background: var(--blue-soft);
+        opacity: 0.72;
+        pointer-events: none;
+      }
+      .favorite-card:nth-child(2) {
+        background: linear-gradient(135deg, #fff, #f4fbfd);
+      }
+      .favorite-card:nth-child(2)::before {
+        background: var(--pink-soft);
+      }
+      .favorite-card:nth-child(3)::before {
+        background: var(--pink-soft);
+      }
+      .favorite-card-head,
+      .favorite-card h3,
+      .favorite-card p,
+      .favorite-card .menu-foot {
+        position: relative;
+        z-index: 1;
+      }
+      .favorite-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .favorite-code {
+        color: var(--ink-soft);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+      }
+      .favorite-mark {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border: 1px solid rgba(217, 93, 148, 0.2);
+        border-radius: 50%;
+        color: var(--pink-deep);
+        font-weight: 700;
+      }
+      .favorite-card .menu-foot {
+        margin-top: 8px;
+      }
+
+      .swatch {
+        width: 100%;
+        height: 96px;
+        border-radius: 14px;
+      }
+
+      .menu-card h3 {
+        font-size: 1.15rem;
+      }
+      .menu-card p {
+        color: var(--ink-soft);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 0;
+        flex-grow: 1;
+      }
+
+      .menu-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .price {
+        font-weight: 800;
+        color: var(--pink-deep);
+      }
+
+      .add-btn {
+        background: var(--blue-soft);
+        color: var(--blue-deep);
+        border: none;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .add-btn:hover {
+        background: var(--blue);
+        color: #fff;
+      }
+
+      /* ---------- Customizer ---------- */
+      .customizer {
+        background: linear-gradient(135deg, #fff, var(--pink-soft) 140%);
+        border-radius: 28px;
+        padding: 44px;
+        box-shadow: var(--shadow);
+      }
+
+      .customizer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 44px;
+      }
+
+      .option-group {
+        margin-bottom: 26px;
+      }
+
+      .option-label {
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: block;
+        color: var(--ink);
+      }
+
+      .option-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .chip {
+        padding: 9px 16px;
+        border-radius: 999px;
+        border: 2px solid rgba(63, 143, 176, 0.25);
+        background: #fff;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.88rem;
+        color: var(--ink-soft);
+        transition: all 0.18s;
+      }
+
+      .chip.active {
+        background: var(--blue-deep);
+        border-color: var(--blue-deep);
+        color: #fff;
+      }
+
+      .chip.topping.active {
+        background: var(--pink-deep);
+        border-color: var(--pink-deep);
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--pink-deep);
+      }
+
+      .level-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: var(--ink-soft);
+        margin-top: 4px;
+      }
+
+      .order-summary {
+        background: #fff;
+        border-radius: 20px;
+        padding: 26px;
+        margin-top: 10px;
+      }
+
+      .order-line {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        font-size: 0.95rem;
+        color: var(--ink-soft);
+      }
+
+      .order-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 800;
+        font-size: 1.2rem;
+        border-top: 2px dashed rgba(63, 143, 176, 0.2);
+        margin-top: 10px;
+        padding-top: 14px;
+        color: var(--ink);
+      }
+
+      /* ---------- Toast / cart drawer ---------- */
+      .toast {
+        position: fixed;
+        bottom: 26px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--ink);
+        color: #fff;
+        padding: 14px 22px;
+        border-radius: 999px;
+        font-weight: 700;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.25s,
+          transform 0.25s;
+        z-index: 100;
+        font-size: 0.92rem;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .cart-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: min(380px, 92vw);
+        background: #fff;
+        box-shadow: -14px 0 40px rgba(0, 0, 0, 0.15);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 90;
+        padding: 28px 24px;
+        display: flex;
+        flex-direction: column;
+      }
+      .cart-drawer.open {
+        transform: translateX(0);
+      }
+
+      .cart-drawer-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .cart-close {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        color: var(--ink-soft);
+      }
+
+      .cart-items {
+        flex-grow: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        background: var(--cream);
+        border-radius: 14px;
+        padding: 12px 14px;
+        font-size: 0.9rem;
+      }
+
+      .cart-item button {
+        background: none;
+        border: none;
+        color: var(--pink-deep);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .cart-empty {
+        color: var(--ink-soft);
+        text-align: center;
+        margin-top: 40px;
+      }
+
+      .cart-drawer .order-total {
+        margin-top: 16px;
+      }
+
+      .checkout-note {
+        color: var(--ink-soft);
+        font-size: 0.78rem;
+        line-height: 1.45;
+        margin: 10px 0 0;
+        text-align: center;
+      }
+
+      .cart-drawer button:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+        transform: none;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(58, 43, 56, 0.35);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        z-index: 80;
+      }
+      .overlay.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* ---------- About ---------- */
+      .about {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+      }
+
+      .about-visual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .about-visual div {
+        height: 140px;
+        border-radius: 20px;
+      }
+      .about-visual div:nth-child(1) {
+        background: var(--pink-soft);
+      }
+      .about-visual div:nth-child(2) {
+        background: var(--blue-soft);
+        margin-top: 26px;
+      }
+      .about-visual div:nth-child(3) {
+        background: var(--blue);
+        margin-top: -14px;
+      }
+      .about-visual div:nth-child(4) {
+        background: var(--pink);
+      }
+
+      .about p {
+        color: var(--ink-soft);
+        line-height: 1.7;
+        margin: 14px 0 0;
+      }
+
+      /* ---------- Footer ---------- */
+      footer {
+        background: var(--ink);
+        color: #f4e9ef;
+        padding: 50px 6vw 30px;
+      }
+
+      .footer-grid {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        gap: 40px;
+      }
+
+      footer h3 {
+        color: #fff;
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+      }
+      footer p,
+      footer a {
+        color: #d8c7d2;
+        font-size: 0.92rem;
+        line-height: 1.7;
+        text-decoration: none;
+      }
+      footer ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .footer-bottom {
+        max-width: 1280px;
+        margin: 34px auto 0;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        font-size: 0.82rem;
+        color: #a790a0;
+        text-align: center;
+      }
+
+      @media (max-width: 860px) {
+        .hero {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+        .hero p {
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .hero-ctas {
+          justify-content: center;
+        }
+        .customizer-grid {
+          grid-template-columns: 1fr;
+        }
+        .about {
+          grid-template-columns: 1fr;
+        }
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        nav {
+          display: none;
+        }
+        .nav-links {
+          display: none;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="header.css" />
+  </head>
+  <body>
+    <div class="bg-swirl"></div>
+
+    <header>
+      <a href="index.html" class="brand">
+        <div class="brand-mark">K</div>
+        <div class="brand-name">Kayla's Milk Tea Shop</div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Beranda</a>
+        <a href="index.html#menu">Menu</a>
+        <a href="index.html#build">Racik Sendiri</a>
+        <a href="catalogue.html">Katalog Teh</a>
+        <a href="index.html#visit">Kontak Kami</a>
+        <li class="nav-item" style="list-style: none">
+          <button class="nav-trigger" type="button">Credits</button>
+          <div class="nav-dropdown">
+            <a href="image-source.html">Image Source</a>
+            <a href="codes-used.html">Codes Used</a>
+            <a href="reference-videos.html">Reference Videos</a>
+          </div>
+        </li>
+      </nav>
+      <button class="cart-pill" id="cartOpenBtn">
+        🧋 Keranjang <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </header>
+
+    <div class="hero">
+      <div>
+        <div class="hero-eyebrow">Diseduh segar, dikocok langsung</div>
+        <h1>
+          Nikmati yang lembut.<span
+            >Selamat datang di Kayla's Milk Tea Shop.</span
+          >
+        </h1>
+        <p>
+          Kayla's Milk Tea Shop menghadirkan milk tea berkualitas dengan daun
+          teh asli dan toppings yang beragam. Di sini, anda bebas meracik
+          minuman anda sendiri sesuai dengan keinginan anda dan membeli daun teh
+          premium dari supplier terpercaya. Nikmati pengalaman minum milk tea
+          yang menyenangkan.
+        </p>
+        <div class="hero-ctas">
+          <a href="#build" class="btn btn-primary">Racik Cupmu</a>
+          <a href="#menu" class="btn btn-outline">Lihat Menu</a>
+          <a href="catalogue.html" class="btn btn-outline">Katalog Teh</a>
+        </div>
+      </div>
+
+      <div class="hero-cup-wrap">
+        <div class="cup-stage">
+          <div class="cup hero-cup">
+            <div class="cup-straw"></div>
+            <div class="cup-body">
+              <div class="cup-fill" id="heroFill"></div>
+            </div>
+            <div class="cup-lid"></div>
+          </div>
+          <div class="cup-caption" id="heroCaption">
+            Classic Milk Tea · 50% Sugar
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section id="menu">
+      <div class="section-head">
+        <div>
+          <h2>Menu Favorit</h2>
+          <p>Pilihan milk tea populer dengan bahan teh dari katalog Kayla.</p>
+        </div>
+      </div>
+
+      <div class="menu-grid" id="menuGrid"></div>
+    </section>
+
+    <section id="build">
+      <div class="section-head">
+        <div>
+          <h2>Racik Sendiri</h2>
+          <p>Pilih base tea, tingkat manis, es, dan topping sesuai selera.</p>
+        </div>
+      </div>
+
+      <div class="customizer">
+        <div class="customizer-grid">
+          <div>
+            <div class="option-group">
+              <span class="option-label">Tea Base</span>
+              <div class="option-row" id="baseOptions"></div>
+            </div>
+
+            <div class="option-group">
+              <span class="option-label"
+                >Sugar Level: <span id="sweetLabel">50%</span></span
+              >
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="25"
+                value="50"
+                id="sweetRange"
+                aria-label="Tingkat manis"
+              />
+              <div class="level-labels">
+                <span>0%</span><span>25%</span><span>50%</span><span>75%</span
+                ><span>100%</span>
+              </div>
+            </div>
+
+            <div class="option-group">
+              <span class="option-label"
+                >Ice Level: <span id="iceLabel">50%</span></span
+              >
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="25"
+                value="50"
+                id="iceRange"
+              />
+              <div class="level-labels">
+                <span>0%</span><span>25%</span><span>50%</span><span>75%</span
+                ><span>100%</span>
+              </div>
+            </div>
+
+            <div class="option-group">
+              <span class="option-label"
+                >Topping (pilih sebanyak yang anda mau)</span
+              >
+              <div class="option-row" id="toppingOptions"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="order-summary">
+              <div class="order-line">
+                <span id="summaryBase">Classic Milk Tea</span
+                ><span id="summaryBasePrice">Rp 22.000</span>
+              </div>
+              <div class="order-line">
+                <span id="summarySweet">Sugar Level: 50%</span><span></span>
+              </div>
+              <div class="order-line">
+                <span id="summaryIce">Ice Level: 50%</span><span></span>
+              </div>
+              <div class="order-line" id="summaryToppingsLine">
+                <span>Topping: Tidak ada</span
+                ><span id="summaryToppingsPrice"></span>
+              </div>
+              <div class="order-total">
+                <span>Total</span><span id="summaryTotal">Rp 22.000</span>
+              </div>
+              <button
+                class="btn btn-primary"
+                style="width: 100%; margin-top: 16px"
+                id="addCustomBtn"
+              >
+                Tambah ke Keranjang
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="about">
+        <div class="about-visual">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div>
+          <h2>Simple Shop, Rich in Taste</h2>
+          <p>
+            Kayla's Milk Tea Shop dimulai sebagai gerai akhir pekan. Setiap cup
+            dibuat sesuai pesanan, tanpa sirup pre-mix, tanpa teh instan. Hanya
+            teh, susu, dan apapun yang ingin anda tambahkan.
+          </p>
+          <p>
+            Kami menjaga menu tetap singkat agar setiap minuman mendapat
+            perhatian penuh, dan kami membuka fitur racik sendiri agar anda
+            tidak perlu berkompromi dengan rasa yang "hampir pas."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer id="visit">
+      <div class="footer-grid">
+        <div>
+          <h3>Kayla's Milk Tea Shop</h3>
+          <p>
+            Milk tea khusus bagi orang-orang yang ingin merancang milk teanya
+            sendiri.
+          </p>
+        </div>
+        <div>
+          <h3>Kontak Kami</h3>
+          <ul>
+            <li>Buka setiap hari · 10am – 5pm</li>
+            <li>3005 Oakland Street, Arlington</li>
+            <li>hello@kayla.tea</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Jelajahi</h3>
+          <ul>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#build">Racik Sendiri</a></li>
+            <li><a href="catalogue.html">Katalog Teh</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © 2026 Kayla's Milk Tea Shop. Dibuat dengan sepenuh hati. Proyek Kayla
+        XI-10 26/27.
+      </div>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+    <div class="overlay" id="overlay"></div>
+    <div class="cart-drawer" id="cartDrawer">
+      <div class="cart-drawer-head">
+        <h3>Keranjangmu</h3>
+        <button class="cart-close" id="cartCloseBtn">&times;</button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <div class="cart-empty">Keranjangmu kosong, tambahkan milk tea!</div>
+      </div>
+      <div class="order-total">
+        <span>Total</span><span id="cartTotal">Rp. 0</span>
+      </div>
+      <button
+        class="btn btn-primary"
+        style="width: 100%; margin-top: 16px"
+        id="checkoutBtn"
+        type="button"
+        disabled
+      >
+        Checkout
+      </button>
+      <p class="checkout-note">
+        Checkout ini hanya simulasi. Tidak ada pembayaran yang diproses.
+      </p>
+    </div>
+
+    <script>
+      // ---------- Data ----------
+      const bases = [
+        {
+          id: "classic",
+          name: "Classic Milk Tea",
+          color: "#FFC852",
+          price: 22000,
+          swatch: "linear-gradient(135deg,#e2b98a,#a9713f)",
+        },
+        {
+          id: "taro",
+          name: "Deep Roast Oolong Milk Tea",
+          color: "#9b7fc9",
+          price: 25000,
+          swatch: "linear-gradient(135deg,#c3aee8,#8b6bc4)",
+        },
+        {
+          id: "matcha",
+          name: "Matcha Latte",
+          color: "#7fa661",
+          price: 27000,
+          swatch: "linear-gradient(135deg,#b7d69a,#6f9a4d)",
+        },
+        {
+          id: "strawberry",
+          name: "Earl Grey Milk Tea",
+          color: "#e8768f",
+          price: 28000,
+          swatch: "linear-gradient(135deg,#f6a9b8,#e05575)",
+        },
+        {
+          id: "blueice",
+          name: "Assam Black Milk Tea",
+          color: "#5aa9c9",
+          price: 23000,
+          swatch: "linear-gradient(135deg,#a9dcef,#3f8fb0)",
+        },
+        {
+          id: "okinawa",
+          name: "Jasmine Milk Tea",
+          color: "#8a5a35",
+          price: 25000,
+          swatch: "linear-gradient(135deg,#c99b6a,#6b4423)",
+        },
+      ];
+
+      const toppings = [
+        { id: "pudding", name: "Egg Pudding", price: 5000 },
+        { id: "jelly", name: "Tea Jelly", price: 6000 },
+        { id: "grass", name: "Grass Jelly", price: 6000 },
+        { id: "oat", name: "Oats", price: 6000 },
+        { id: "soy", name: "Soya Bean Curd", price: 6000 },
+        { id: "boba", name: "Boba", price: 6000 },
+      ];
+
+      const favorites = [
+        {
+          name: "Classic Assam Milk Tea",
+          price: 22000,
+          description:
+            "Assam Black Tea dari katalog dipadukan dengan susu lembut untuk rasa klasik.",
+        },
+        {
+          name: "Brown Sugar Milk Tea",
+          price: 25000,
+          description:
+            "Assam Black Tea, susu creamy, dan manis gula aren dalam racikan favorit.",
+        },
+        {
+          name: "Jasmine Green Milk Tea",
+          price: 24000,
+          description:
+            "Jasmine Green Tea dari katalog dengan aroma melati dan susu segar.",
+        },
+      ];
+
+      // ---------- State ----------
+      let cart = [];
+      let selectedBase = bases[0];
+      let sweet = 50;
+      let ice = 50;
+      let selectedToppings = [];
+
+      const fmt = (n) => "Rp " + n.toLocaleString("id-ID");
+
+      // ---------- Render menu ----------
+      const menuGrid = document.getElementById("menuGrid");
+      favorites.forEach((drink, index) => {
+        const card = document.createElement("div");
+        card.className = "menu-card favorite-card";
+        card.innerHTML = `
+      <h3>${drink.name}</h3>
+      <p>${drink.description}</p>
+      <div class="menu-foot">
+        <span class="price">${fmt(drink.price)}</span>
+        <button class="add-btn">Tambah</button>
+      </div>
+    `;
+        card.querySelector(".add-btn").addEventListener("click", (e) => {
+          e.stopPropagation();
+          addToCart({
+            base: drink.name,
+            ice: 100,
+            toppings: [],
+            price: drink.price,
+          });
+          showToast(`${drink.name} ditambahkan ke keranjang`);
+        });
+        menuGrid.appendChild(card);
+      });
+
+      // ---------- Render base chips ----------
+      const baseOptions = document.getElementById("baseOptions");
+      bases.forEach((b) => {
+        const chip = document.createElement("button");
+        chip.className = "chip" + (b.id === selectedBase.id ? " active" : "");
+        chip.textContent = b.name;
+        chip.addEventListener("click", () => {
+          selectedBase = b;
+          [...baseOptions.children].forEach((c) =>
+            c.classList.remove("active"),
+          );
+          chip.classList.add("active");
+          updateBuildSummary();
+        });
+        baseOptions.appendChild(chip);
+      });
+
+      // ---------- Render topping chips ----------
+      const toppingOptions = document.getElementById("toppingOptions");
+      toppings.forEach((t) => {
+        const chip = document.createElement("button");
+        chip.className = "chip topping";
+        chip.textContent = `${t.name} (+${fmt(t.price)})`;
+        chip.addEventListener("click", () => {
+          if (selectedToppings.find((x) => x.id === t.id)) {
+            selectedToppings = selectedToppings.filter((x) => x.id !== t.id);
+            chip.classList.remove("active");
+          } else {
+            selectedToppings.push(t);
+            chip.classList.add("active");
+          }
+          updateBuildSummary();
+        });
+        toppingOptions.appendChild(chip);
+      });
+
+      // ---------- Ice Level ----------
+      const sweetRange = document.getElementById("sweetRange");
+      sweetRange.addEventListener("input", () => {
+        sweet = Number(sweetRange.value);
+        document.getElementById("sweetLabel").textContent = sweet + "%";
+        updateBuildSummary();
+      });
+
+      const iceRange = document.getElementById("iceRange");
+      iceRange.addEventListener("input", () => {
+        ice = Number(iceRange.value);
+        document.getElementById("iceLabel").textContent = ice + "%";
+        updateBuildSummary();
+      });
+
+      // ---------- Custom drink summary update ----------
+      function updateBuildSummary() {
+        const toppingsTotal = selectedToppings.reduce((s, t) => s + t.price, 0);
+        const total = selectedBase.price + toppingsTotal;
+
+        document.getElementById("summaryBase").textContent = selectedBase.name;
+        document.getElementById("summaryBasePrice").textContent = fmt(
+          selectedBase.price,
+        );
+        document.getElementById("summaryIce").textContent =
+          `Tingkat Es: ${ice}%`;
+        document.getElementById("summarySweet").textContent =
+          `Tingkat Manis: ${sweet}%`;
+        document.getElementById(
+          "summaryToppingsLine",
+        ).firstElementChild.textContent = selectedToppings.length
+          ? `Topping: ${selectedToppings.map((t) => t.name).join(", ")}`
+          : "Topping: Tidak ada";
+        document.getElementById("summaryToppingsPrice").textContent =
+          toppingsTotal ? fmt(toppingsTotal) : "";
+        document.getElementById("summaryTotal").textContent = fmt(total);
+      }
+
+      function shade(hex, percent) {
+        const num = parseInt(hex.replace("#", ""), 16);
+        let r = (num >> 16) + percent;
+        let g = ((num >> 8) & 0x00ff) + percent;
+        let b = (num & 0x0000ff) + percent;
+        r = Math.max(Math.min(255, r), 0);
+        g = Math.max(Math.min(255, g), 0);
+        b = Math.max(Math.min(255, b), 0);
+        return "#" + (g | (r << 8) | (b << 16)).toString(16).padStart(6, "0");
+      }
+
+      document.getElementById("addCustomBtn").addEventListener("click", () => {
+        const toppingsTotal = selectedToppings.reduce((s, t) => s + t.price, 0);
+        addToCart({
+          base: selectedBase.name,
+          ice,
+          toppings: selectedToppings.map((t) => t.name),
+          price: selectedBase.price + toppingsTotal,
+        });
+        showToast(`${selectedBase.name} ditambahkan ke keranjang`);
+      });
+
+      // ---------- Hero cup gentle animation ----------
+      const heroFill = document.getElementById("heroFill");
+      heroFill.style.background = bases[0].swatch;
+      let heroToggle = false;
+      setInterval(() => {
+        heroToggle = !heroToggle;
+        heroFill.style.height = heroToggle ? "95%" : "85%";
+      }, 2600);
+
+      // ---------- Cart logic ----------
+      const cartItemsEl = document.getElementById("cartItems");
+      const cartCountEl = document.getElementById("cartCount");
+      const cartTotalEl = document.getElementById("cartTotal");
+      const checkoutBtn = document.getElementById("checkoutBtn");
+
+      function addToCart(item) {
+        cart.push(item);
+        renderCart();
+      }
+
+      function removeFromCart(index) {
+        cart.splice(index, 1);
+        renderCart();
+      }
+
+      function renderCart() {
+        cartCountEl.textContent = cart.length;
+        if (cart.length === 0) {
+          cartItemsEl.innerHTML =
+            '<div class="cart-empty">Keranjangmu kosong, tambahkan milk tea!</div>';
+        } else {
+          cartItemsEl.innerHTML = "";
+          cart.forEach((item, i) => {
+            const row = document.createElement("div");
+            row.className = "cart-item";
+            const toppingsText = item.toppings.length
+              ? ` · ${item.toppings.join(", ")}`
+              : "";
+            row.innerHTML = `
+          <div>
+            <strong>${item.base}</strong><br>
+            <span style="color:var(--ink-soft); font-size:0.82rem;">${item.ice}% es${toppingsText}</span>
+          </div>
+          <div style="text-align:right;">
+            <div>${fmt(item.price)}</div>
+            <button data-i="${i}">Hapus</button>
+          </div>
+        `;
+            row
+              .querySelector("button")
+              .addEventListener("click", () => removeFromCart(i));
+            cartItemsEl.appendChild(row);
+          });
+        }
+        const total = cart.reduce((s, i) => s + i.price, 0);
+        cartTotalEl.textContent = fmt(total);
+        checkoutBtn.disabled = cart.length === 0;
+      }
+
+      // ---------- Toast ----------
+      const toast = document.getElementById("toast");
+      let toastTimer;
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+      }
+
+      // ---------- Cart drawer open/close ----------
+      const cartDrawer = document.getElementById("cartDrawer");
+      const overlay = document.getElementById("overlay");
+      document.getElementById("cartOpenBtn").addEventListener("click", () => {
+        cartDrawer.classList.add("open");
+        overlay.classList.add("show");
+      });
+      function closeCart() {
+        cartDrawer.classList.remove("open");
+        overlay.classList.remove("show");
+      }
+      document
+        .getElementById("cartCloseBtn")
+        .addEventListener("click", closeCart);
+      overlay.addEventListener("click", closeCart);
+      checkoutBtn.addEventListener("click", () => {
+        if (cart.length === 0) return;
+        cart.length = 0;
+        renderCart();
+        closeCart();
+        showToast("Checkout demo berhasil. Pembayaran tidak diproses.");
+      });
+
+      updateBuildSummary();
+      renderCart();
+    </script>
+  </body>
+</html>

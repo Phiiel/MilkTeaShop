@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codes Used · Kayla's Milk Tea Shop</title>
+    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="credits-sections.css" />
+    <style>
+      @font-face {
+        font-family: "Helvetica";
+        src: url(Helvetica.ttf) format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+      body {
+        margin: 0;
+        background: var(--cream);
+        color: var(--ink);
+        font-family: "Helvetica", sans-serif;
+      }
+      a {
+        color: inherit;
+      }
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+      }
+      .bg-swirl {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background:
+          radial-gradient(
+            circle at 12% 8%,
+            var(--pink-soft) 0%,
+            transparent 38%
+          ),
+          radial-gradient(
+            circle at 88% 18%,
+            var(--blue-soft) 0%,
+            transparent 42%
+          ),
+          radial-gradient(
+            circle at 20% 92%,
+            var(--blue-soft) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 88%,
+            var(--pink-soft) 0%,
+            transparent 38%
+          );
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-swirl"></div>
+    <header>
+      <a href="index.html" class="brand">
+        <div class="brand-mark">K</div>
+        <div class="brand-name">Kayla's Milk Tea Shop</div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Beranda</a>
+        <a href="index.html#menu">Menu</a>
+        <a href="index.html#build">Racik Sendiri</a>
+        <a href="catalogue.html">Katalog Teh</a>
+        <a href="index.html#visit">Kontak Kami</a>
+        <div class="nav-item">
+          <button class="nav-trigger" type="button">Credits</button>
+          <div class="nav-dropdown">
+            <a href="image-source.html">Image Source</a>
+            <a href="codes-used.html">Codes Used</a>
+            <a href="reference-videos.html">Reference Videos</a>
+          </div>
+        </div>
+      </nav>
+      <a href="index.html#build" class="btn">Kustom Minuman</a>
+    </header>
+    <main>
+      <a class="back-link" href="index.html">← Kembali ke Beranda</a>
+      <h1 class="page-title">Codes Used</h1>
+      <p class="intro">
+        Situs web ini dibuat menggunakan bahasa pengembangan web front-end
+        standar.
+      </p>
+      <div class="credit-list">
+        <section class="credit-card">
+          <h2>Bahasa yang Digunakan</h2>
+          <ul>
+            <li><strong>HTML</strong> untuk struktur web</li>
+            <li>
+              <strong>CSS</strong> untuk layout, warna, cards, hero section,
+              tombol, and responsive styling
+            </li>
+            <li>
+              <strong>JavaScript</strong> untuk menu interaktif, customizer,
+              toast notifications, and navbar dropdown highlights
+            </li>
+            <li><strong>Google Fonts</strong> untuk tipografi Helvetica</li>
+          </ul>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

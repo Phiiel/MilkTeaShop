@@ -1176,9 +1176,9 @@
         },
         {
           id: "matcha",
-          name: "Matcha Latte",
+          name: "Brown Sugar Milk Tea",
           color: "#7fa661",
-          price: 27000,
+          price: 25000,
           swatch: "linear-gradient(135deg,#b7d69a,#6f9a4d)",
         },
         {
@@ -1199,7 +1199,7 @@
           id: "okinawa",
           name: "Jasmine Milk Tea",
           color: "#8a5a35",
-          price: 25000,
+          price: 24000,
           swatch: "linear-gradient(135deg,#c99b6a,#6b4423)",
         },
       ];
@@ -1215,22 +1215,25 @@
 
       const favorites = [
         {
-          name: "Assam Milk Tea",
+          name: "Classic Milk Tea",
           price: 22000,
-          description:
-            "Assam Black Tea dari katalog dipadukan dengan susu lembut untuk rasa klasik.",
+          description: "Ceylon Black Tea dari katalog dengan susu segar.",
+        },
+        {
+          name: "Deep Roast Oolong Milk Tea",
+          price: 25000,
+          description: "Oolong Tea dari katalog dengan susu segar.",
         },
         {
           name: "Brown Sugar Milk Tea",
-          price: 25000,
-          description:
-            "Deep Roast Oolong Tea, susu creamy, dan manis gula aren dalam racikan favorit.",
+          price: 24000,
+          description: " Milk Tea classic dengan tambahan gula aren.",
         },
         {
-          name: "Jasmine Green Milk Tea",
+          name: "Jasmine Milk Tea",
           price: 24000,
           description:
-            "Jasmine Green Tea dari katalog dengan aroma melati dan susu segar.",
+            "Jasmine Tea dari katalog dengan aroma melati dan susu segar.",
         },
       ];
 
@@ -1246,13 +1249,13 @@
         const card = document.createElement("div");
         card.className = "menu-card favorite-card";
         card.innerHTML = `
-      <h3>${drink.name}</h3>
-      <p>${drink.description}</p>
-      <div class="menu-foot">
-        <span class="price">${fmt(drink.price)}</span>
-        <button class="add-btn">Tambah</button>
-      </div>
-    `;
+        <h3>${drink.name}</h3>
+        <p>${drink.description}</p>
+        <div class="menu-foot">
+          <span class="price">${fmt(drink.price)}</span>
+          <button class="add-btn">Tambah</button>
+        </div>
+      `;
         card.querySelector(".add-btn").addEventListener("click", (e) => {
           e.stopPropagation();
           addToCart({

@@ -32,7 +32,6 @@ const checkoutBtn = document.getElementById("checkoutBtn");
 const cartDrawer = document.getElementById("cartDrawer");
 const overlay = document.getElementById("overlay");
 
-// Langsung set jumlah keranjang dari awal biar gak ada flash "0"
 if (cartCountEl) {
   cartCountEl.textContent = cart.length;
 }

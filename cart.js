@@ -140,16 +140,93 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeCart();
 });
 
-if (checkoutBtn) {
-  checkoutBtn.addEventListener("click", () => {
+document.addEventListener("click", (e) => {
+  if (e.target && e.target.id === "checkoutBtn") {
     if (cart.length === 0) return;
+
+    const checkoutModal = document.getElementById("checkoutModal");
+    if (checkoutModal) {
+      checkoutModal.style.display = "block";
+      checkoutModal.setAttribute("aria-hidden", "false");
+    }
+  }
+
+  if (e.target && e.target.id === "modalCloseBtn") {
+    resetAndCloseModal();
+  }
+
+  const checkoutModal = document.getElementById("checkoutModal");
+  if (e.target === checkoutModal) {
+    resetAndCloseModal();
+  }
+
+  if (e.target && e.target.id === "modalConfirmBtn") {
+    const paymentEl = document.querySelector(
+      'input[name="paymentMethod"]:checked',
+    );
+    const fulfillmentEl = document.querySelector(
+      'input[name="fulfillmentMethod"]:checked',
+    );
+    const deliveryAddress = document.getElementById("deliveryAddress");
+
+    if (!paymentEl || !fulfillmentEl) return;
+
+    const payment = paymentEl.value;
+    const fulfillment = fulfillmentEl.value;
+
+    if (
+      fulfillment === "Dikirim" &&
+      (!deliveryAddress || deliveryAddress.value.trim() === "")
+    ) {
+      alert("Mohon isi alamat pengiriman terlebih dahulu!");
+      return;
+    }
+
     cart.length = 0;
     renderCart();
     closeCart();
-    showToast("Checkout demo berhasil!");
-  });
+    resetAndCloseModal();
+
+    if (fulfillment === "Makan di Tempat" || fulfillment === "Take Away") {
+      showToast("Silahkan tunggu dan ambil pesananmu di tempat pengambilan!");
+    } else if (fulfillment === "Dikirim") {
+      showToast("Terimakasih, tunggu barangmu di rumah ya!");
+    }
+  }
+});
+
+function resetAndCloseModal() {
+  const checkoutModal = document.getElementById("checkoutModal");
+  const addressSection = document.getElementById("addressSection");
+  const deliveryAddress = document.getElementById("deliveryAddress");
+
+  if (checkoutModal) {
+    checkoutModal.style.display = "none";
+    checkoutModal.setAttribute("aria-hidden", "true");
+  }
+  if (addressSection) addressSection.style.display = "none";
+  if (deliveryAddress) deliveryAddress.value = "";
+
+  const defaultRadio = document.querySelector(
+    'input[name="fulfillmentMethod"][value="Makan di Tempat"]',
+  );
+  if (defaultRadio) defaultRadio.checked = true;
 }
 
+document.body.addEventListener("change", (e) => {
+  if (e.target && e.target.name === "fulfillmentMethod") {
+    const addressSection = document.getElementById("addressSection");
+    if (addressSection) {
+      if (e.target.value === "Dikirim") {
+        addressSection.style.display = "block";
+      } else {
+        addressSection.style.display = "none";
+      }
+    }
+  }
+});
+
+// ---------- Pemulihan State Halaman ----------
 window.addEventListener("pageshow", (e) => {
   if (e.persisted) {
     cart = loadCart();

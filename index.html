@@ -900,6 +900,132 @@
           display: none;
         }
       }
+      .modal-popup {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(58, 43, 56, 0.5);
+        backdrop-filter: blur(4px);
+      }
+
+      /* Kotak Konten Popup */
+      .modal-popup-content {
+        background-color: var(--cream, #fffaf6);
+        color: var(--ink);
+        margin: 5% auto;
+        padding: 26px;
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(217, 93, 148, 0.2);
+        width: 90%;
+        max-width: 420px;
+        position: relative;
+        animation: popupSlide 0.3s ease;
+      }
+
+      @keyframes popupSlide {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Tombol Tutup (X) */
+      .modal-close-btn {
+        position: absolute;
+        right: 20px;
+        top: 15px;
+        font-size: 28px;
+        color: var(--ink-soft);
+        cursor: pointer;
+      }
+      .modal-close-btn:hover {
+        color: var(--pink-deep);
+      }
+
+      .modal-popup-content h3 {
+        margin-top: 0;
+        color: var(--pink-deep);
+        font-family: "Helvetica", sans-serif;
+      }
+
+      .modal-section {
+        margin-bottom: 20px;
+      }
+
+      .modal-section h4 {
+        margin: 0 0 10px 0;
+        color: var(--ink);
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+
+      .modal-options {
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .option-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid rgba(63, 143, 176, 0.14);
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        color: var(--ink-soft);
+      }
+
+      .option-item input[type="radio"] {
+        accent-color: var(--pink-deep);
+        width: 18px;
+        height: 18px;
+      }
+
+      #deliveryAddress {
+        width: 100%;
+        height: 60px;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(63, 143, 176, 0.2);
+        font-family: inherit;
+        font-size: 0.88rem;
+        resize: none;
+        box-sizing: border-box;
+        color: var(--ink);
+      }
+
+      #deliveryAddress:focus {
+        outline: none;
+        border-color: var(--pink-deep);
+      }
+
+      .modal-confirm-btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 999px;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--pink-deep), var(--pink));
+        color: #fff;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+      }
+      .modal-confirm-btn:hover {
+        transform: translateY(-1px);
+      }
     </style>
     <link rel="stylesheet" href="header.css" />
   </head>
@@ -1376,5 +1502,74 @@
       updateBuildSummary();
       renderCart();
     </script>
+
+    <!-- Popup Pilihan Checkout!!!  -->
+    <div id="checkoutModal" class="modal-popup" aria-hidden="true">
+      <div class="modal-popup-content">
+        <span id="modalCloseBtn" class="modal-close-btn">&times;</span>
+        <h3>Detail Pemesanan 🧋</h3>
+
+        <!-- Bagian 1: Pembayaran -->
+        <div class="modal-section">
+          <h4>💳 Metode Pembayaran</h4>
+          <div class="modal-options">
+            <label class="option-item">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="Cash di Kasir"
+                checked
+              />
+              <span>Cash di Kasir</span>
+            </label>
+            <label class="option-item">
+              <input type="radio" name="paymentMethod" value="QRIS" />
+              <span>QRIS (E-Wallet)</span>
+            </label>
+            <label class="option-item">
+              <input type="radio" name="paymentMethod" value="Debit" />
+              <span>Kartu Debit</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Bagian 2: Pengambilan -->
+        <div class="modal-section">
+          <h4>🛵 Metode Pengambilan</h4>
+          <div class="modal-options">
+            <label class="option-item">
+              <input
+                type="radio"
+                name="fulfillmentMethod"
+                value="Makan di Tempat"
+                checked
+              />
+              <span>Makan di Tempat (Dine-in)</span>
+            </label>
+            <label class="option-item">
+              <input type="radio" name="fulfillmentMethod" value="Take Away" />
+              <span>Bawa Pulang (Take Away)</span>
+            </label>
+            <label class="option-item">
+              <input type="radio" name="fulfillmentMethod" value="Dikirim" />
+              <span>Kirim via Kurir (+ Rp 5.000)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Bagian 3: Kolom Alamat Input -->
+        <div id="addressSection" class="modal-section" style="display: none">
+          <h4>📍 Alamat Pengiriman</h4>
+          <textarea
+            id="deliveryAddress"
+            placeholder="Masukkan alamat lengkap rumahmu di sini..."
+          ></textarea>
+        </div>
+
+        <button id="modalConfirmBtn" class="modal-confirm-btn">
+          Konfirmasi Pesanan
+        </button>
+      </div>
+    </div>
   </body>
 </html>

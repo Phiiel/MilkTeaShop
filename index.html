@@ -1026,6 +1026,25 @@
       .modal-confirm-btn:hover {
         transform: translateY(-1px);
       }
+
+      /* Toppings */
+      #summaryToppingsLine {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 100%;
+        gap: 20px;
+      }
+
+      #summaryToppingsLine > *:first-child {
+        flex: 1;
+        word-break: break-word;
+      }
+
+      #summaryToppingsPrice {
+        white-space: nowrap;
+        text-align: right;
+      }
     </style>
     <link rel="stylesheet" href="header.css" />
   </head>

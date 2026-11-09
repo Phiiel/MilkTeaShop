@@ -733,10 +733,24 @@
       .cart-item {
         display: flex;
         justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
         background: var(--cream);
         border-radius: 14px;
         padding: 12px 14px;
         font-size: 0.9rem;
+      }
+
+      .cart-item > div:first-child {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .cart-item div[style*="text-align: right"],
+      .cart-item-actions {
+        flex-shrink: 0;
+        text-align: right;
+        white-space: nowrap;
       }
 
       .cart-item button {
